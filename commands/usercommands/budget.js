@@ -18,7 +18,12 @@ class budgetCommand extends Command{
     }
 
     run(msg){
-        if(msg.member.roles.cache.some(r=>r.name==="🎸Summer Event")){
+        var current = new Date();
+        var start = new Date(2021,6,21,15);  // change for testing
+        if(current < start){
+            msg.reply(`The main event hasn't started yet! Please see <#${storychannel}> for when it begins~`);
+        }
+        else if(msg.member.roles.cache.some(r=>r.name==="🎸Summer Event")){
             if(msg.author.id in feverpoints){  // If already reacted
                 msg.reply(`Your remaining budget for this week is ${feverpoints[msg.author.id]} ${emojiname}`)
             }
@@ -28,7 +33,7 @@ class budgetCommand extends Command{
             }
         }
         else{
-            msg.reply(`You are not a member of the event~! Please see #announcements if you would like to take part.`)
+            msg.reply(`You are not a member of the event~! Please see <#${announcementchannel}> if you would like to take part.`)
         }
     }
 

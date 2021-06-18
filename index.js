@@ -10,7 +10,8 @@ const client = new commando.CommandoClient({
 const submissionchannel = '855264608637681685'
 const modchannel = '855246091871584256'
 const botchannel = '855264608637681685'
-const storychannel = '855264608637681685'
+global.storychannel = '855264608637681685'
+global.announcementchannel = '855264608637681685'
 const pointemoji = '855263455681970205'
 //Point balances
 global.feverpoints = {
@@ -39,8 +40,8 @@ client.on("messageReactionAdd", function(messageReaction, user){
     if(user.id != '855212596743372811' && messageReaction.emoji.id === pointemoji
         && messageReaction.message.channel.id === submissionchannel){
         //if user does not have the role, remove it
+        // fetch member from ID
         let User = messageReaction.message.guild.member(client.users.cache.get(user.id));
-        console.log(User);
         if(User.roles.cache.some(r=>r.name==="🎸Summer Event")){
             // if budget is 1 or more, remove from budget. otherwise, remove reaction and warn user
             if(user.id in feverpoints){  
@@ -48,7 +49,7 @@ client.on("messageReactionAdd", function(messageReaction, user){
                     feverpoints[user.id] -= 1;
                 }
                 else{
-                    messageReaction.message.reply('You are out of points!');
+                    client.channels.cache.get(botchannel).send(`You are out of points, <@${user.id}>~! Try unreacting to previous works if you want your budget back.`);
                     messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
                 }
             }
@@ -57,7 +58,7 @@ client.on("messageReactionAdd", function(messageReaction, user){
             }
         }
         else{  // remove the reaction
-            messageReaction.message.reply('You are not part of the event!');
+            client.channels.cache.get(botchannel).send(`You are not part of the event, <@${user.id}>! Check <#${announcementchannel}> for details and how to join~`);
             messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
         }
     }

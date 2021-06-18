@@ -20,7 +20,7 @@ class budgetCommand extends Command{
     }
 
     run(msg){
-        msg.reply(feverpoints)
+        msg.reply(JSON.stringify(feverpoints))
     }
 
 }
