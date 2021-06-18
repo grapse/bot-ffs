@@ -32,8 +32,11 @@ client.on('message', message => {
 });
 
 client.on("messageReactionAdd", function(messageReaction, user){
-    if(user.id != '855212596743372811'){
-        messageReaction.message.reply('r');
+    // only need if the reaction is not by bot & fever point emoji & in the right channel
+    if(user.id != '855212596743372811' && messageReaction.emoji.id === pointemoji
+        && messageReaction.message.channel.id === submissionchannel){
+        // if budget is 1 or more, remove from budget. otherwise, remove reaction and warn user
+        messageReaction.message.reply('test');
     }
     
 });
