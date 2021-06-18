@@ -30,10 +30,13 @@ client.on('message', message => {
 		message.react(pointemoji);
 	}
 });
-/*
+
 client.on("messageReactionAdd", function(messageReaction, user){
-    console.log(`a reaction is added to a message`);
-});*/
+    if(user.id != '855212596743372811'){
+        messageReaction.message.reply('r');
+    }
+    
+});
 
 client.setProvider(
     sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
