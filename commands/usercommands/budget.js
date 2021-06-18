@@ -18,8 +18,7 @@ class budgetCommand extends Command{
 
     run(msg){
         var current = new Date();
-        var start = new Date(2021,6,21,15);  // change for testing
-        if(current < start){
+        if(current < startdate){
             msg.reply(`The main event hasn't started yet! Please see <#${storychannel}> for when it begins~`);
         }
         else if(msg.member.roles.cache.some(r=>r.name==="🎸Summer Event")){

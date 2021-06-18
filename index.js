@@ -16,6 +16,7 @@ global.pointemoji = '855263455681970205'
 //Point balances
 global.feverpoints = {
 };
+global.startdate = new Date(2021,6,21,15);
 
 client.registry.registerDefaults()
 	.registerGroups([
@@ -42,7 +43,11 @@ client.on("messageReactionAdd", function(messageReaction, user){
         //if user does not have the role, remove it
         // fetch member from ID
         let User = messageReaction.message.guild.member(client.users.cache.get(user.id));
-        if(User.roles.cache.some(r=>r.name==="🎸Summer Event")){
+        var current = new Date();
+        if(current < startdate){
+            client.channels.cache.get(botchannel).send(`The main event has not yet started, <@${user.id}>! Check <#${announcementchannel}> for the starting date~`);
+        }
+        else if(User.roles.cache.some(r=>r.name==="🎸Summer Event")){
             // if budget is 1 or more, remove from budget. otherwise, remove reaction and warn user
             if(user.id in feverpoints){  
                 if(feverpoints[user.id] > 0){
