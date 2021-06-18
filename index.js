@@ -12,7 +12,7 @@ const modchannel = '855246091871584256'
 const botchannel = '855264608637681685'
 global.storychannel = '855264608637681685'
 global.announcementchannel = '855264608637681685'
-const pointemoji = '855263455681970205'
+global.pointemoji = '855263455681970205'
 //Point balances
 global.feverpoints = {
 };

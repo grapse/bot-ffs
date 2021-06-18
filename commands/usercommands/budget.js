@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando')
-const emojiname = '<:FeverPoint:855263455681970205>'
 
 class budgetCommand extends Command{
 
@@ -25,11 +24,11 @@ class budgetCommand extends Command{
         }
         else if(msg.member.roles.cache.some(r=>r.name==="🎸Summer Event")){
             if(msg.author.id in feverpoints){  // If already reacted
-                msg.reply(`Your remaining budget for this week is ${feverpoints[msg.author.id]} ${emojiname}`)
+                msg.reply(`Your remaining budget for this week is ${feverpoints[msg.author.id]} ${pointemoji}`)
             }
             else{  // Otherwise add to the dict
                 feverpoints[msg.author.id] = 8;
-                msg.reply(`Your remaining budget for this week is 8 ${emojiname}. Try spending some on works that move your heart~`)
+                msg.reply(`Your remaining budget for this week is 8 ${pointemoji}. Try spending some on works that move your heart~`)
             }
         }
         else{

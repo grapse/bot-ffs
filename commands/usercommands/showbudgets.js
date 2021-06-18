@@ -20,7 +20,16 @@ class budgetCommand extends Command{
     }
 
     run(msg){
-        msg.reply(JSON.stringify(feverpoints))
+        try{
+            var printstr = `__Here are the current budgets__:\n`;
+            for(const [key,value] of Object.entries(feverpoints)){
+                printstr += `<@${key}>: ${value}\n`;
+            }
+            msg.say(printstr)
+        }
+        catch{
+            msg.say('Something went wrong.')
+        }
     }
 
 }
