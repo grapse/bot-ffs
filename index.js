@@ -7,16 +7,16 @@ const client = new commando.CommandoClient({
     unknownCommandResponse: false, // Set this to true if you want to send a message when a user uses the prefix not followed by a command
 })
 //Server specifics
-const submissionchannel = '855264608637681685'
-const modchannel = '855246091871584256'
-const botchannel = '855264608637681685'
-global.storychannel = '855264608637681685'
-global.announcementchannel = '855264608637681685'
-global.pointemoji = '855263455681970205'
+const submissionchannel = '854272406529245196'
+const modchannel = '855591311046606918'
+const botchannel = '855720576529334272'
+global.storychannel = '854272472727420968'
+global.announcementchannel = '854272472727420968'
+global.pointemoji = '855534976900923413'
 //Point balances
 global.feverpoints = {
 };
-global.startdate = new Date(2021,6,21,15);
+global.startdate = new Date(2021,4,21,15);
 
 client.registry.registerDefaults()
 	.registerGroups([
@@ -31,14 +31,16 @@ client.on('ready',()=>{
 // For reacts
 client.on('message', message => {
 	if (message.channel.id === submissionchannel) {
-		message.react(pointemoji);
+        const reactionEmoji = message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+		message.react(reactionEmoji);
 	}
 });
 
 // Handle point budgets
 client.on("messageReactionAdd", function(messageReaction, user){
     // only need if the reaction is not by bot & fever point emoji & in the right channel 
-    if(user.id != '855212596743372811' && messageReaction.emoji.id === pointemoji
+    const reactionEmoji = messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+    if(user.id != '855212596743372811' && messageReaction.emoji === reactionEmoji
         && messageReaction.message.channel.id === submissionchannel){
         //if user does not have the role, remove it
         // fetch member from ID
@@ -46,6 +48,7 @@ client.on("messageReactionAdd", function(messageReaction, user){
         var current = new Date();
         if(current < startdate){
             client.channels.cache.get(botchannel).send(`The main event has not yet started, <@${user.id}>! Check <#${announcementchannel}> for the starting date~`);
+            messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
         }
         else if(User.roles.cache.some(r=>r.name==="🎸Summer Event")){
             // if budget is 1 or more, remove from budget. otherwise, remove reaction and warn user
@@ -54,6 +57,7 @@ client.on("messageReactionAdd", function(messageReaction, user){
                     feverpoints[user.id] -= 1;
                 }
                 else{
+                    feverpoints[user.id] -=1;
                     client.channels.cache.get(botchannel).send(`You are out of points, <@${user.id}>~! Try unreacting to previous works if you want your budget back.`);
                     messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
                 }
@@ -66,6 +70,27 @@ client.on("messageReactionAdd", function(messageReaction, user){
             client.channels.cache.get(botchannel).send(`You are not part of the event, <@${user.id}>! Check <#${announcementchannel}> for details and how to join~`);
             messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
         }
+    }
+    
+});
+
+// Add point back if unreacted
+// Handle point budgets
+client.on("messageReactionRemove", function(messageReaction, user){
+    // only need if the reaction is not by bot & fever point emoji & in the right channel 
+    const reactionEmoji = messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+    if(user.id != '855212596743372811' && messageReaction.emoji === reactionEmoji
+        && messageReaction.message.channel.id === submissionchannel){
+        // add point back
+        try{
+            if(user.id in feverpoints){
+                feverpoints[user.id] +=1 ;
+            }
+        }
+        catch{
+            client.channels.cache.get(modchannel).send(`Something went wrong with <@${user.id}>'s react.`);
+        }
+        
     }
     
 });
