@@ -44,6 +44,12 @@ class budgetCommand extends Command{
             if(type === 'single'){
                 feverpoints[id] = amount;
                 msg.say(`The points for <@${id}> have been set to ${amount}`);
+                //update message
+                modchannelobj = msg.client.channels.cache.get(modchannel);
+                modchannelobj.messages.fetch(pointmessage)
+                    .then(message => message.edit(JSON.stringify(feverpoints)))
+                    .catch(console.error);
+                
                 /*
                 if(id in feverpoints){
                     feverpoints[id] = amount;
@@ -56,6 +62,11 @@ class budgetCommand extends Command{
             else if (type === 'all'){
                 feverpoints = {};
                 msg.say(`The reset has been done.`)
+                //update message
+                modchannelobj = msg.client.channels.cache.get(modchannel);
+                modchannelobj.messages.fetch(pointmessage)
+                    .then(message => message.edit(JSON.stringify(feverpoints)))
+                    .catch(console.error);
             }
         }
         catch{

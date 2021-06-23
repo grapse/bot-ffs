@@ -5,14 +5,15 @@ require('dotenv').config()
 const client = new commando.CommandoClient({
     owner: '195688819821903872', // Your ID here.
     commandPrefix: 'p?', // The prefix of your bot.
+    partials: ['MESSAGE','REACTION'],
     unknownCommandResponse: false, // Set this to true if you want to send a message when a user uses the prefix not followed by a command
 })
 //Server specifics
-const submissionchannel = '854272406529245196'
-const modchannel = '855591311046606918'
-const botchannel = '855720576529334272'
-const pointmessage = '857149573574164520'
-const infomessage = '857150131429179424'
+global.submissionchannel = '854272406529245196'
+global.modchannel = '855591311046606918'
+global.botchannel = '855720576529334272'
+global.pointmessage = '857175990172909629'
+global.infomessage = '857175999485444116'
 global.storychannel = '854272472727420968'
 global.announcementchannel = '854272472727420968'
 global.pointemoji = '855534976900923413'
@@ -65,6 +66,11 @@ client.on("messageReactionAdd", function(messageReaction, user){
             if(user.id in feverpoints){  
                 if(feverpoints[user.id] > 0){
                     feverpoints[user.id] -= 1;
+                    //update message
+                    modchannelobj = client.channels.cache.get(modchannel);
+                    modchannelobj.messages.fetch(pointmessage)
+                        .then(message => message.edit(JSON.stringify(feverpoints)))
+                        .catch(console.error);
                 }
                 else{
                     feverpoints[user.id] -=1;
@@ -74,6 +80,11 @@ client.on("messageReactionAdd", function(messageReaction, user){
             }
             else{  // Otherwise add to the dict
                 feverpoints[user.id] = 7;  // Starts with 7 because 1 has been used just now
+                //update message
+                modchannelobj = client.channels.cache.get(modchannel);
+                modchannelobj.messages.fetch(pointmessage)
+                    .then(message => message.edit(JSON.stringify(feverpoints)))
+                    .catch(console.error);
             }
         }
         else{  // remove the reaction
