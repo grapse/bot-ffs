@@ -1,6 +1,7 @@
 const commando = require('discord.js-commando')
 const path = require('path')
 const sqlite = require('sqlite')
+require('dotenv').config()
 const client = new commando.CommandoClient({
     owner: '195688819821903872', // Your ID here.
     commandPrefix: 'p?', // The prefix of your bot.
@@ -10,12 +11,14 @@ const client = new commando.CommandoClient({
 const submissionchannel = '854272406529245196'
 const modchannel = '855591311046606918'
 const botchannel = '855720576529334272'
+const pointmessage = '857149573574164520'
+const infomessage = '857150131429179424'
 global.storychannel = '854272472727420968'
 global.announcementchannel = '854272472727420968'
 global.pointemoji = '855534976900923413'
 //Point balances
-global.feverpoints = {
-};
+global.feverpoints = {};
+global.info = {};
 global.startdate = new Date(2021,4,21,15);
 
 client.registry.registerDefaults()
@@ -26,6 +29,13 @@ client.registry.registerDefaults()
 
 client.on('ready',()=>{
     console.log(`Logged in and ready to be used.. use "${client.commandPrefix}help".`)
+    modchannelobj = client.channels.cache.get(modchannel);
+    modchannelobj.messages.fetch(pointmessage)
+        .then(message => feverpoints = JSON.parse(message.content))
+        .catch(console.error);
+    modchannelobj.messages.fetch(infomessage)
+        .then(message => info = JSON.parse(message.content))
+        .catch(console.error);
 })
 
 // For reacts
@@ -98,4 +108,4 @@ client.on("messageReactionRemove", function(messageReaction, user){
 client.setProvider(
     sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
 ).catch(console.error);
-client.login("ODU1MjEyNTk2NzQzMzcyODEx.YMvMzA.YgzDJ8FAXU3_N_TYnrsxHBkeobw")
+client.login(process.env.TOKEN)

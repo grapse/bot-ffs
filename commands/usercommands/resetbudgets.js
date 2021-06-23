@@ -42,13 +42,16 @@ class budgetCommand extends Command{
     run(msg,{type,id,amount}){
         try{
             if(type === 'single'){
+                feverpoints[id] = amount;
+                msg.say(`The points for <@${id}> have been set to ${amount}`);
+                /*
                 if(id in feverpoints){
                     feverpoints[id] = amount;
                     msg.say(`The points for <@${id}> have been reset to ${amount}`);
                 }
                 else{
                     msg.say(`<@${id}> is not in the list yet.`);
-                }
+                }*/
             }
             else if (type === 'all'){
                 feverpoints = {};
