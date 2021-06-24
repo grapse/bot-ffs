@@ -1,6 +1,7 @@
 // Owner only. Returns dictionary of all user IDs and their fever points.
 
 const { Command } = require('discord.js-commando')
+const { MessageEmbed } = require('discord.js');
 
 class budgetCommand extends Command{
 
@@ -25,7 +26,9 @@ class budgetCommand extends Command{
             for(const [key,value] of Object.entries(feverpoints)){
                 printstr += `<@${key}>: ${value}\n`;
             }
-            msg.say(printstr)
+            const newembed = new MessageEmbed()
+                .setDescription(printstr)
+            msg.say(newembed)
         }
         catch{
             msg.say('Something went wrong.')

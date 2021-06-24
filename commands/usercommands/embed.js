@@ -39,7 +39,7 @@ class sayCommand extends Command {
         try{
             var embedargs = text.split("|");
             var embedColor = '#d60270';
-            var embedTitle = 'Producer Tips';
+            var embedTitle = '';
             if(embedargs.length > 2){
                 embedTitle = embedargs[2]
                 if(embedargs.length > 3){

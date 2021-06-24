@@ -32,7 +32,6 @@ class budgetCommand extends Command{
                     prompt: 'How much to reset to?',
                     type: 'integer',
                     default: 8,
-                    validate: amount => 0 <= amount <= 8,
                 },
 			],
         })
@@ -42,13 +41,20 @@ class budgetCommand extends Command{
     run(msg,{type,id,amount}){
         try{
             if(type === 'single'){
-                feverpoints[id] = amount;
-                msg.say(`The points for <@${id}> have been set to ${amount}`);
-                //update message
-                modchannelobj = msg.client.channels.cache.get(modchannel);
-                modchannelobj.messages.fetch(pointmessage)
-                    .then(message => message.edit(JSON.stringify(feverpoints)))
-                    .catch(console.error);
+                if(amount < 0){
+                    delete feverpoints[id];
+                    msg.say(`<@${id}> has been removed.`);
+                }
+                else{
+                    feverpoints[id] = amount;
+                    msg.say(`The points for <@${id}> have been set to ${amount}`);
+                    //update message
+                    modchannelobj = msg.client.channels.cache.get(modchannel);
+                    modchannelobj.messages.fetch(pointmessage)
+                        .then(message => message.edit(JSON.stringify(feverpoints)))
+                        .catch(console.error);
+                }
+                
                 
                 /*
                 if(id in feverpoints){
