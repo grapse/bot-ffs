@@ -1,6 +1,8 @@
 const fs = require('fs');
 const { Client, Collection } = require('discord.js');
-const { token, firebaseAdminKey } = require('./config.json');
+require('dotenv').config()
+const token = process.env.TOKEN;
+const firebaseAdminKey = process.env.firebaseAdminKey;
 const { MessageEmbed } = require('discord.js');
 const cron = require('cron');
 
@@ -247,4 +249,4 @@ client.on("messageReactionRemove", function(messageReaction, user){
     
 });
 
-client.login(token);
+client.login(process.env.TOKEN);

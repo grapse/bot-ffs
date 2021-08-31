@@ -17,13 +17,15 @@ const basicheader = '---|Basic Information|---';
 const nextheader = '---|';
 const basicfields = ['name','truename','class','colour','attribute','alignment','gender','height','weight'
                     ,'artist','writer','stats','nickname','traits','icon','website'];
-//Firebase----------------------------------
-const { firebaseAdminKey } = require('../config.json');
+                    require('dotenv').config()
+                    //Firebase----------------------------------
+                    const firebaseAdminKey = process.env.firebaseAdminKey;
 
 var admin = require("firebase-admin");
 
 // Fetch the service account key JSON file contents
 var serviceAccount = require("../ffs-bot-49e0ca636b9d.json");
+serviceAccount['private_key'] = process.env.private_key.replace(/\\n/g, '\n');
 
 // Initialize the app with a custom auth variable, limiting the server's access
 admin.initializeApp({
