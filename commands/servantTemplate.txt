@@ -1,0 +1,55 @@
+Template
+* means the field is mandatory. Do not edit the ---||--- fields at all. (you can remove the non basic info ones or swap the order though) 
+Fields are denoted by |pipes|. They are not case-sensitive, and the end does not matter (|Name (cannot be edited)|) is the same as |Name|)
+Their order also does not matter, and you can delete the non mandatory ones.
+
+The schema for all additional categories are the same, and they are entirely up to you to customize. So the names are only suggestions/general categories.
+You can split the additional categories into pages with |page|, pages into embeds with |embed|. If you don't, the bot will automatically split it for you.
+Each embed gets its own thumbnail icon |icon|, image |image|, and title |title|. These are all optional.
+Discord markdown like **bold**, *italics*, and `code` also work.
+
+You can also delete this part. Or add some notes here if you want. They won't be included.
+
+
+---|Basic Information|---
+
+|Name* (cannot be edited)|
+|TrueName|
+|Class*|
+|Colour (Hex code)|
+|Attribute|
+|Alignment|
+|Gender|
+|Height|
+|Weight|
+|Artist| 
+|Writer|
+|Stats (ex. STR:A,MP:B...)|
+|Nicknames (ex. Penelope,IR) These cannot be removed.|
+|Traits (ex. Dragon,Servant)|
+|Icon (image URL)|
+|Website URL (ex. a google doc)|
+Basic description goes here.
+
+---|Images, Notes|---
+You can put stuff like images and author notes here.
+
+
+---|Skills, NPs, etc|---
+You can put stuff like passives, active skills, and NPs here. You could even describe their fighting style, and so on.
+
+
+---|Character Info, History, etc|---
+You can put stuff like motivations for the Grail, historical story, etc here. Character trivia like likes and dislikes could also go here.
+
+
+---|Dialogue, Interactions|---
+You can put stuff like dialogue, lines for other characters, relationship charts, and so on here.
+
+
+---|Notes (you can delete this part or replace with your own notes)
+
+Do not put sensitive information in this doc. The contents will be stored in a database online (a private one but best to be safe).
+The name cannot include slashes or pipes.
+Do not use the field tags like '|embed|' or document tags '---|' etc in your actual writing (there shouldn't be a situation where this becomes an issue though)
+Using backslashes like escape newlines (\\n) *may* also cause issues, but they aren't really used for anything.

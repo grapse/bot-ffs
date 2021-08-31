@@ -1,0 +1,43 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
+module.exports = {
+	name: 'wiki',
+	data: new SlashCommandBuilder()
+		.setName('wiki')
+		.setDescription('???')
+        .addStringOption(option =>
+            option.setName('query')
+                .setDescription('query')
+                .setRequired(true)),
+	async execute(msg,source) {
+		//source to tell whether it was slash command to trigger it.
+		// 0 = regular, 1 = slash
+        var args = msg;
+        var user = msg;
+		try{
+            //Configure user and args depending on slash or regular commmand.
+            //Only reply and etc can be used 
+			if(source == 1){
+                user = msg.user;
+                if(user.id != '195688819821903872'){
+                    return msg.reply('Invalid command. Please try again.')
+                }
+                args = interaction.data.options;
+			}
+			else{
+                user = msg.author;
+                if(user.id != '195688819821903872'){
+                    return msg.reply('Invalid command. Please try again.')
+                }
+				args = msg.content.split(' ');
+                args.shift();
+			}
+            msg.reply(args.toString());
+		}
+		catch(err){
+			return msg.reply('Something went wrong.'+err);
+		}
+		
+		
+	},
+};

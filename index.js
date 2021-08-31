@@ -1,61 +1,208 @@
-const commando = require('discord.js-commando')
-const path = require('path')
-const sqlite = require('sqlite')
-require('dotenv').config()
-const client = new commando.CommandoClient({
-    owner: '195688819821903872', // Your ID here.
-    commandPrefix: 'p?', // The prefix of your bot.
-    partials: ['MESSAGE','REACTION'],
-    unknownCommandResponse: false, // Set this to true if you want to send a message when a user uses the prefix not followed by a command
-})
+const fs = require('fs');
+const { Client, Collection } = require('discord.js');
+const { token, firebaseAdminKey } = require('./config.json');
+const { MessageEmbed } = require('discord.js');
+const cron = require('cron');
+
+const client = new Client({ intents: ["GUILDS", "DIRECT_MESSAGES","GUILD_MESSAGES","GUILD_MESSAGE_REACTIONS","DIRECT_MESSAGE_REACTIONS"]
+							,partials: ["CHANNEL","MESSAGE","REACTION"] });
+const prefix = 'p?';
+
+client.commands = new Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.data.name, command);
+}
+
+// Initialize Firebase----------------------------------
+var admin = require("firebase-admin");
+
+// Fetch the service account key JSON file contents
+var serviceAccount = require("./ffs-bot-49e0ca636b9d.json");
+
+// Initialize the app with a custom auth variable, limiting the server's access
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://ffs-bot-default-rtdb.firebaseio.com",
+  databaseAuthVariableOverride: {
+    uid: firebaseAdminKey
+  }
+});
+
+//---------------------------------------------------
 //Server specifics
-global.submissionchannel = '854272406529245196'
-global.modchannel = '855591311046606918'
-global.botchannel = '855720576529334272'
-global.pointmessage = '857175990172909629'
-global.infomessage = '857175999485444116'
-global.storychannel = '854272472727420968'
-global.announcementchannel = '854272472727420968'
-global.pointemoji = '855534976900923413'
-//Point balances
-global.feverpoints = {};
-global.info = {};
-global.startdate = new Date(2021,4,21,15);
+const submissionchannel = '854272406529245196'
+const modchannel = '855591311046606918'
+const botchannel = '855720576529334272'
+const pointmessage = '857520219999305728'
+const announcementchannel = '854272472727420968'
+const startdate = new Date(2021,6,21,15);
+const storagechannel = '857519718936084510'
+const botid = '855212596743372811'
+const nachannel = '679889032884387852'
 
-client.registry.registerDefaults()
-	.registerGroups([
-        ['test', 'usercommands']
-	])
-	.registerCommandsIn(path.join(__dirname,"commands"))
 
-client.on('ready',()=>{
-    console.log(`Logged in and ready to be used.. use "${client.commandPrefix}help".`)
-    modchannelobj = client.channels.cache.get(modchannel);
-    modchannelobj.messages.fetch(pointmessage)
-        .then(message => feverpoints = JSON.parse(message.content))
-        .catch(console.error);
-    modchannelobj.messages.fetch(infomessage)
-        .then(message => info = JSON.parse(message.content))
-        .catch(console.error);
-})
+//Functions----------------------------------
+function unreact(user,feverpoints,message){
+  if(user.id in feverpoints){
+                feverpoints[user.id] +=1 ;
+                message.edit(JSON.stringify(feverpoints));
+            }
+}
+//find nth occurence of substring
+function nthIndex(str, pat, n){
+    var L= str.length, i= -1;
+    while(n-- && i++<L){
+        i= str.indexOf(pat, i);
+        if (i < 0) break;
+    }
+    return i;
+}
 
-// For reacts
-client.on('message', message => {
-	if (message.channel.id === submissionchannel) {
-        const reactionEmoji = message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
-		message.react(reactionEmoji);
+//Embeds
+function makeEmbed(text){
+    if(text.startsWith('p?') || text.startsWith('aq') || text.startsWith('addquote')){
+      text = text.substring(nthIndex(text,' ',2));
+    }
+
+    var embedargs = text.split("|");
+    var embedColor = '#000000';
+    var embedTitle = ' ';
+    if(embedargs.length > 2){
+        embedTitle = embedargs[2]
+        if(embedargs.length > 3){
+            embedColor = embedargs[3];
+        }
+    }
+    const newembed = new MessageEmbed()
+        .setColor(embedColor)
+        .setTitle(embedTitle)
+        .setDescription(embedargs[0]+' ')
+        .setImage(embedargs[1])
+    return newembed
+}
+
+function handlePts(messageReaction,user,feverpoints,client,message){
+  if(user.id in feverpoints){  
+                if(feverpoints[user.id] > 0){
+                    feverpoints[user.id] -= 1;
+                    //update message
+                    var modchannelobj = client.channels.cache.get(storagechannel);
+                    message.edit(JSON.stringify(feverpoints));
+                }
+                else{
+                    feverpoints[user.id] -=1;
+                    client.channels.cache.get(botchannel).send(`You are out of points, <@${user.id}>~! Try unreacting to previous works if you want your budget back.`);
+                    messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
+                    message.edit(JSON.stringify(feverpoints));
+                }
+            }
+            else{  // Otherwise add to the dict
+                feverpoints[user.id] = 14;  // Starts with 7 because 1 has been used just now
+                //update message
+                message.edit(JSON.stringify(feverpoints));
+            }
+}
+
+//-----------------------------------------------------
+
+
+client.once('ready', () => {
+	console.log('Ready!a');
+    const scheduledMessage = new cron.CronJob('00 00 03 * * *', function() {
+		// Specifing your guild (server) and your channel
+		   client.channels.cache.get(nachannel).send(`<@&${'835447374519730178'}> Don't forget to log in!`);
+		  });
+			  
+		  // When you want to start it, use:
+		  scheduledMessage.start();
+		  //console.log('test');
+});
+
+client.on('interactionCreate', async interaction => {
+	// Handle slash commands
+	//console.log('test');
+	if (!interaction.isCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction,1);
+	} catch (error) {
+		console.error(error);
+		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
 
-// Handle point budgets
-client.on("messageReactionAdd", function(messageReaction, user){
+client.on('messageCreate', message => {
+	//handle point react
+	if (message.channel.id === submissionchannel) {
+        const reactionEmoji = message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+		message.react(reactionEmoji);}
+		
+	//console.log('test1');
+	const msg = message.content;
+	if(msg.startsWith(prefix)){
+		//slice prefix and all arguments
+		//take up to first whitespace character
+		var hasspace = msg.indexOf(' ');
+		if(hasspace == -1){
+			hasspace = msg.length;
+		}
+		var hasnew = msg.indexOf('\n');
+		if(hasnew == -1){
+			hasnew = msg.length;
+		}
+		var checkcharacter = ' '
+		if(hasnew < hasspace){
+			checkcharacter = '\n'
+		}
+		const usercommand = msg.substr(prefix.length).split(checkcharacter)[0];
+		//console.log(usercommand)
+		//console.log(usercommand);
+		try{
+			const command = client.commands.get(usercommand);
+			command.execute(message,0);
+		} catch(error){
+			return message.reply('That is not a valid command!');
+		}
+
+	}
+	//Handle Quotes--------------------------------------------------------------------     
+	if(message.content.startsWith('p!')){
+		var searchKey = message.content.substring(2).toLowerCase();
+		var quoteRef = admin.database().ref('quotes/'+searchKey);
+		//console.log(quoteRef);
+		quoteRef.on('value', (snapshot) => {
+		  	if(snapshot.exists()){
+				var quoteData = snapshot.val();
+				var channelobj = client.channels.cache.get(quoteData.cid);
+				//console.log(quoteData.cid);
+				channelobj.messages.fetch(quoteData.mid)
+				.then(m => message.reply({embeds:[makeEmbed(m.content)]}))
+				.catch(console.error);
+			}
+			else{
+				message.reply("I don't think that is a valid quote.");
+			}
+		
+		});
+		
+	  }
+});
+
+client.on("messageReactionAdd", function(messageReaction, user) {
     // only need if the reaction is not by bot & fever point emoji & in the right channel 
     const reactionEmoji = messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
-    if(user.id != '855212596743372811' && messageReaction.emoji === reactionEmoji
+    if(user.id != botid && messageReaction.emoji === reactionEmoji
         && messageReaction.message.channel.id === submissionchannel){
         //if user does not have the role, remove it
         // fetch member from ID
-        let User = messageReaction.message.guild.member(client.users.cache.get(user.id));
+        let User = messageReaction.message.guild.members.cache.get(user.id);
         var current = new Date();
         if(current < startdate){
             client.channels.cache.get(botchannel).send(`The main event has not yet started, <@${user.id}>! Check <#${announcementchannel}> for the starting date~`);
@@ -63,29 +210,11 @@ client.on("messageReactionAdd", function(messageReaction, user){
         }
         else if(User.roles.cache.some(r=>r.name==="🎸Summer Event")){
             // if budget is 1 or more, remove from budget. otherwise, remove reaction and warn user
-            if(user.id in feverpoints){  
-                if(feverpoints[user.id] > 0){
-                    feverpoints[user.id] -= 1;
-                    //update message
-                    modchannelobj = client.channels.cache.get(modchannel);
+            var modchannelobj = client.channels.cache.get(storagechannel);
                     modchannelobj.messages.fetch(pointmessage)
-                        .then(message => message.edit(JSON.stringify(feverpoints)))
+                        .then(message => handlePts(messageReaction,user,JSON.parse(message.content),client,message))
                         .catch(console.error);
-                }
-                else{
-                    feverpoints[user.id] -=1;
-                    client.channels.cache.get(botchannel).send(`You are out of points, <@${user.id}>~! Try unreacting to previous works if you want your budget back.`);
-                    messageReaction.message.reactions.resolve(messageReaction).users.remove(user.id);
-                }
-            }
-            else{  // Otherwise add to the dict
-                feverpoints[user.id] = 7;  // Starts with 7 because 1 has been used just now
-                //update message
-                modchannelobj = client.channels.cache.get(modchannel);
-                modchannelobj.messages.fetch(pointmessage)
-                    .then(message => message.edit(JSON.stringify(feverpoints)))
-                    .catch(console.error);
-            }
+            
         }
         else{  // remove the reaction
             client.channels.cache.get(botchannel).send(`You are not part of the event, <@${user.id}>! Check <#${announcementchannel}> for details and how to join~`);
@@ -104,9 +233,11 @@ client.on("messageReactionRemove", function(messageReaction, user){
         && messageReaction.message.channel.id === submissionchannel){
         // add point back
         try{
-            if(user.id in feverpoints){
-                feverpoints[user.id] +=1 ;
-            }
+            var modchannelobj = client.channels.cache.get(storagechannel);
+                modchannelobj.messages.fetch(pointmessage)
+                    .then(message => unreact(user,JSON.parse(message.content),message))
+                    .catch(console.error);
+                
         }
         catch{
             client.channels.cache.get(modchannel).send(`Something went wrong with <@${user.id}>'s react.`);
@@ -116,7 +247,4 @@ client.on("messageReactionRemove", function(messageReaction, user){
     
 });
 
-client.setProvider(
-    sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
-).catch(console.error);
-client.login(process.env.TOKEN)
+client.login(token);
