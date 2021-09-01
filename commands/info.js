@@ -28,7 +28,6 @@ function makeEmbed(text){
 
 function getinfo(info,msg,args){
     var lowerKey = args[1].toLowerCase();
-    console.log(info);
     if(lowerKey in info){
                           sayInfo(info[lowerKey],msg,botchannel);
                           return 
