@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, DiscordAPIError } = require('discord.js');
 require('dotenv').config()
 const token = process.env.TOKEN;
 const firebaseAdminKey = process.env.firebaseAdminKey;
@@ -184,9 +184,16 @@ client.on('messageCreate', message => {
 				var quoteData = snapshot.val();
 				var channelobj = client.channels.cache.get(quoteData.cid);
 				//console.log(quoteData.cid);
-				channelobj.messages.fetch(quoteData.mid)
+				if(searchKey == 'wikitemplate'){
+					channelobj.messages.fetch(quoteData.mid)
+					.then(m => message.reply({embeds:[new Discord.makeEmbed().setDescription(m.content)]}))
+					.catch(console.error);
+				}
+				else{
+					channelobj.messages.fetch(quoteData.mid)
 				.then(m => message.reply({embeds:[makeEmbed(m.content)]}))
 				.catch(console.error);
+				}
 			}
 			else{
 				message.reply("I don't think that is a valid quote.");
