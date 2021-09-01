@@ -7,6 +7,7 @@ const pagelimit = 25;
 const embedlimit = 10;
 const messagelimit = 1800;
 const sectionlimit = 25000;
+const servantlimit = 50;
 const sectionheaders = {
     image:'---|image',
     skill:'---|skill',
@@ -277,9 +278,10 @@ module.exports = {
 			}
 			else{
                 user = msg.author;
-                if(user.id != '195688819821903872'){
+                if(!['195688819821903872','200076180248985600','160085493227323392','183409479252049920'].includes(user.id)){
                     return msg.reply('Invalid command. Please try again.')
                 }
+                
                 var hasspace = msg.content.indexOf(' ');
                 if(hasspace == -1){
                     hasspace = msg.content.length;
@@ -297,6 +299,16 @@ module.exports = {
 				args = msg.content.substr(msg.content.indexOf(checkcharacter) + 1);
 				
 			}
+            var db = admin.database()
+                db.ref('users/"'+user.id+'"/servants').get().then((usersnapshot) => {
+                    if(usersnapshot.exists()){
+                        console.log(Object.keys(usersnapshot.val()).length)
+                        if(Object.keys(usersnapshot.val()).length > servantlimit){
+                            return msg.reply('You have exceeded the maximum number of allowed Servants!')
+                        }
+                    }
+                    
+               
             var textfile;
             if(args.length < 250 && isValidHttpUrl(args) && args.endsWith('.txt')){
                 //If user sends via link
@@ -328,6 +340,7 @@ module.exports = {
                 addToWiki(textfile,msg);
             }
             return;
+        }).catch(console.error);
 
 		}
 		catch(err){

@@ -184,10 +184,11 @@ client.on('messageCreate', message => {
 		  	if(snapshot.exists()){
 				var quoteData = snapshot.val();
 				var channelobj = client.channels.cache.get(quoteData.cid);
+				console.log(searchKey);
 				//console.log(quoteData.cid);
 				if(searchKey == 'wikitemplate'){
 					channelobj.messages.fetch(quoteData.mid)
-					.then(m => message.reply({embeds:[new Discord.makeEmbed().setDescription(m.content)]}))
+					.then(m => message.reply({embeds:[new Discord.MessageEmbed().setDescription(m.content)]}))
 					.catch(console.error);
 				}
 				else{
