@@ -395,9 +395,9 @@ module.exports = {
             //Only reply and etc can be used 
 			if(source == 1){
                 user = msg.user;
-                if(!['195688819821903872'].includes(user.id)){
+                
                     return msg.reply('The wiki is not available via slash command yet!')
-                }
+                
                 args = interaction.data.options[0];
 			}
 			else{

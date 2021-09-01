@@ -143,7 +143,7 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', message => {
 	//handle point react
 	if (message.channel.id === submissionchannel) {
-        const reactionEmoji = message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+        const reactionEmoji = '<:FeverPoint:854957388805177348>'//message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
 		message.react(reactionEmoji);}
 		
 	//console.log('test1');
@@ -199,7 +199,7 @@ client.on('messageCreate', message => {
 
 client.on("messageReactionAdd", function(messageReaction, user) {
     // only need if the reaction is not by bot & fever point emoji & in the right channel 
-    const reactionEmoji = messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+    const reactionEmoji = '<:FeverPoint:854957388805177348>';//messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
     if(user.id != botid && messageReaction.emoji === reactionEmoji
         && messageReaction.message.channel.id === submissionchannel){
         //if user does not have the role, remove it
@@ -230,7 +230,7 @@ client.on("messageReactionAdd", function(messageReaction, user) {
 // Handle point budgets
 client.on("messageReactionRemove", function(messageReaction, user){
     // only need if the reaction is not by bot & fever point emoji & in the right channel 
-    const reactionEmoji = messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
+    const reactionEmoji ='<:FeverPoint:854957388805177348>'// messageReaction.message.guild.emojis.cache.find(emoji => emoji.name === 'FeverPoint');
     if(user.id != '855212596743372811' && messageReaction.emoji === reactionEmoji
         && messageReaction.message.channel.id === submissionchannel){
         // add point back

@@ -463,7 +463,7 @@ module.exports = {
 	name: 'wikiedit',
 	data: new SlashCommandBuilder()
 		.setName('wikiedit')
-		.setDescription('Add to servant wiki')
+		.setDescription('???')
         .addStringOption(option =>
             option.setName('query')
                 .setDescription('query')
@@ -478,9 +478,7 @@ module.exports = {
             //Only reply and etc can be used 
 			if(source == 1){
                 user = msg.user;
-                if(user.id != '195688819821903872'){
                     return msg.reply('The wiki is not available via slash command yet!')
-                }
                 args = interaction.data.options;
 			}
 			else{
