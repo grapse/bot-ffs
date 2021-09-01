@@ -5,6 +5,7 @@ const token = process.env.TOKEN;
 const firebaseAdminKey = process.env.firebaseAdminKey;
 const { MessageEmbed } = require('discord.js');
 const cron = require('cron');
+const Discord = require('discord.js');
 
 const client = new Client({ intents: ["GUILDS", "DIRECT_MESSAGES","GUILD_MESSAGES","GUILD_MESSAGE_REACTIONS","DIRECT_MESSAGE_REACTIONS"]
 							,partials: ["CHANNEL","MESSAGE","REACTION"] });
