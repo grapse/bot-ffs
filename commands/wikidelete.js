@@ -48,9 +48,7 @@ module.exports = {
 			}
 			else{
                 user = msg.author;
-                if(!['195688819821903872','200076180248985600','160085493227323392','183409479252049920'].includes(user.id)){
-                    return msg.reply('Invalid command. Please try again.')
-                }
+                
 				args = msg.content.substr(msg.content.indexOf(" ") + 1);
                 if(args == 'p?wiki'){
                     return msg.reply('Please include a search, or use `p?wiki random` for a surprise! \nIf you would like to add your own Servants, please use `p?wikitemplate` for more info!')

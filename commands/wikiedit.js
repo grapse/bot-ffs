@@ -483,9 +483,7 @@ module.exports = {
 			}
 			else{
                 user = msg.author;
-                if(!['195688819821903872','200076180248985600','160085493227323392','183409479252049920'].includes(user.id)){
-                    return msg.reply('Invalid command. Please try again.')
-                }
+                
 				var hasspace = msg.content.indexOf(' ');
                 if(hasspace == -1){
                     hasspace = msg.content.length;
