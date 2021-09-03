@@ -241,7 +241,10 @@ function addToWiki(text,msg){
                     if(checkdelete){
                         newInfo[0] = checkdelete[1];
                         checkdelete = checkdelete[0].split(','); // split into numbers
-                        deletepages.push(checkdelete);  //push into delete stuff
+                        for(i = 0;i<checkdelete[0].length;i++){
+                            deletepages.push(checkdelete[i]);
+                        }
+                        //deletepages.push(checkdelete);  //push into delete stuff
                         if(deletepages.includes('all')){
                             deletepages = 'all';
                         }
