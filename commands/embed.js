@@ -1,9 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const storychannel = '854272472727420968'
-const announcementchannel = '853919927420846090'
-const startdate = new Date(2021,6,21,15);
-const reactionEmoji = '<:FeverPoint:854957388805177348>'
-const botchannel = '855720576529334272'
 const Discord = require('discord.js');
 
 

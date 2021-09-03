@@ -186,7 +186,7 @@ client.on('messageCreate', message => {
 				var channelobj = client.channels.cache.get(quoteData.cid);
 				console.log(searchKey);
 				//console.log(quoteData.cid);
-				if(searchKey == 'wikitemplate'){
+				if(['wikitemplate','wikiedit'].includes(searchKey)){
 					channelobj.messages.fetch(quoteData.mid)
 					.then(m => message.reply({embeds:[new Discord.MessageEmbed().setDescription(m.content)]}))
 					.catch(console.error);
