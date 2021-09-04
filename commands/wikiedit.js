@@ -119,6 +119,7 @@ function addToWiki(text,msg){
             }
             else{
                 checkname = trybasic[0];  //set checked name
+                basicInfo[1] = trybasic[1].trim();
             }
         }
         text = basicInfo[1];  //remove popped portion
