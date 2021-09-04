@@ -173,7 +173,7 @@ function addToWiki(text,msg){
             }
             if(basicInfo.trim().length > 0){
                 //make sure to only update description if exists
-                basicFields['description'] = basicInfo;
+                basicFields['description'] = basicInfo.trim();
             }
             
             if(basicFields['nickname']){
@@ -214,7 +214,7 @@ function addToWiki(text,msg){
             //format the stat and nickname data
             if(basicFields['stats']){
                 var newStat = {AGI:'-',END:'-',LUK:'-',MP:'-',NP:'-',STR:'-'};
-                const altnames = {AGI:['agility','agi'],END:['endurance','end','con'],LUK:['luck','luk','luc'],
+                const altnames = {AGI:['agility','agi','agl'],END:['endurance','end','con'],LUK:['luck','luk','luc'],
                                     MP:['mp','mana','mgi','man'],NP:['np','noble phantasm'],STR:['str','atk','strength']};
                 for(let key in newStat){
                     for(i = 0;i<altnames[key].length;i++){
