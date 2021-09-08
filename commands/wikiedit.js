@@ -82,7 +82,7 @@ function addToWiki(text,msg){
     try{
         //First validate that the important details are there, and throw an error if it is not.
         var basicInfo = popTag(text,basicheader,nextheader,2000)  //gather basic information, 2000 is limit
-        var checkname;
+        var checkname = null;
         if(basicInfo){
             var trybasic = popTag(basicInfo[0],'|name','\n',250,regfield='|');
             if(trybasic){
@@ -91,7 +91,7 @@ function addToWiki(text,msg){
                 basicInfo[0] = trybasic[1].trim();
             }
         }
-        else{
+        else if(!checkname){
             var trimmed = text.trim();
             if(trimmed.indexOf('|') == 0){
                 if(text.indexOf('|',1) == -1){
@@ -109,6 +109,11 @@ function addToWiki(text,msg){
                 var hasnew = trimmed.indexOf('\n');
                 if(hasnew == -1){
                     hasnew = trimmed.length;
+                }
+                else{
+                    if(trimmed.substr(0,hasnew).indexOf('|') == -1){
+                        hasspace = trimmed.length;  // if there are no tags in first row use newline
+                    }
                 }
                 checkname = trimmed.substr(0,Math.min(hasspace,hasnew));
             }
