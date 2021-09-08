@@ -83,7 +83,15 @@ function addToWiki(text,msg){
         //First validate that the important details are there, and throw an error if it is not.
         var basicInfo = popTag(text,basicheader,nextheader,2000)  //gather basic information, 2000 is limit
         var checkname;
-        if(!basicInfo){
+        if(basicInfo){
+            var trybasic = popTag(basicInfo[0],'|name','\n',250,regfield='|');
+            if(trybasic){
+                checkname = trybasic[0];  //set checked name
+                //basicInfo[1] = trybasic[1].trim();
+                basicInfo[0] = trybasic[1].trim();
+            }
+        }
+        else{
             var trimmed = text.trim();
             if(trimmed.indexOf('|') == 0){
                 if(text.indexOf('|',1) == -1){
@@ -112,17 +120,7 @@ function addToWiki(text,msg){
                 checkname = checkname.substr(0,checkname.length-1);
             }
         }
-        else{
-            var trybasic = popTag(basicInfo[0],'|name','\n',250,regfield='|');
-            if(!trybasic){
-                throw 'You did not seem to include a name.';
-            }
-            else{
-                checkname = trybasic[0];  //set checked name
-                //basicInfo[1] = trybasic[1].trim();
-                basicInfo[0] = trybasic[1].trim();
-            }
-        }
+
         text = basicInfo[1];  //remove popped portion
         basicInfo = basicInfo[0]; //change to popped portion only
 
