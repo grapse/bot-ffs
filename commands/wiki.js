@@ -60,7 +60,6 @@ function makeEmbed(msg,text,user,type,page,pagecount){
     //image: image screen
 
     //page is the page for images, etc. home does not have pages usually
-    //console.log(type);
     var newembed;
     try{
         switch (type){
@@ -168,18 +167,27 @@ function makeEmbed(msg,text,user,type,page,pagecount){
                 }
                 //check for added variables
                 var check = popTag(currentpage[i],'|title|','\n',250);
+                if(!check){
+                    check = popTag(currentpage[i],'title:','\n',250);
+                }
                 if(check){
                     currembed.setTitle(check[0]);
                     currembed.setDescription(check[1]);
                     currentpage[i] = check[1];
                 }
                 check = popTag(currentpage[i],'|image|','\n',250);
+                if(!check){
+                    check = popTag(currentpage[i],'image:','\n',250);
+                }
                 if(check){
                     currembed.setImage(check[0]);
                     currembed.setDescription(check[1]);
                     currentpage[i] = check[1];
                 }
                 check = popTag(currentpage[i],'|icon|','\n',250);
+                if(!check){
+                    check = popTag(currentpage[i],'icon:','\n',250);
+                }
                 if(check){
                     currembed.setThumbnail(check[0]);
                     currembed.setDescription(check[1]);
@@ -274,7 +282,6 @@ function handleButtons(usermsg,botmsg,info,user){
                     // re enable backward button as navigating away from 1st page
                     backward.setDisabled(false);
                 }
-                //console.log(currentpage);
                 botmsg.edit({content:' ',embeds:makeEmbed(usermsg,info,user,currentview,currentpage,counts[currentview]),
                 components:[new Discord.MessageActionRow().addComponents(home,backward,forward)]});
                 break;
@@ -325,7 +332,6 @@ function handleButtons(usermsg,botmsg,info,user){
   });
 
   collector.on('end', collected => {
-    //console.log(buttons.components);
     botmsg.edit({content:'As you have been idle for more than 2 minutes, this wiki search has timed out. Use `p?wiki` again to navigate pages.',components:[]});
   });
 
@@ -373,7 +379,6 @@ function handleWiki(msg,info,user){
   msg.reply({content:' ',embeds:makeEmbed(msg,info,user,'truename',0,0),components: [row]})
     .then((m) => handleButtons(msg,m,info,user))
     .catch(console.error);
-  //console.log(sent_msg);
   
 }
 
@@ -423,7 +428,6 @@ module.exports = {
                 }//*/
                 
 				args = msg.content.substr(msg.content.indexOf(checkcharacter) + 1);
-                //console.log(args)
                 if(args.length < 1){
                     return msg.reply('Please include a search, or use `p?wiki random` for a surprise! \nIf you would like to add your own Servants, please use `p?wikitemplate` for more info!')
                 }

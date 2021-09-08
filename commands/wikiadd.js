@@ -82,7 +82,10 @@ function addToWiki(text,msg){
     try{
         //First validate that the important details are there, and throw an error if it is not.
         var basicInfo = popTag(text,basicheader,nextheader,2000)  //gather basic information, 2000 is limit
-        if(!basicInfo){
+        if(!basicInfo && text.toLowerCase().indexOf('name:') != -1){
+            basicInfo = popTag(text,'',nextheader,2000);
+        }
+        else if(!basicInfo){
             throw 'I could not find the basic information tag `'+basicheader+'`. If you included it, you may have gone over the 2000 character limit.'
         }
         text = basicInfo[1];  //remove popped portion
@@ -93,9 +96,12 @@ function addToWiki(text,msg){
             // load basic values
             trybasic = popTag(basicInfo,'|'+basicfields[i],'\n',250,regfield='|');
             if(!trybasic){
+                trybasic = popTag(basicInfo,basicfields[i]+':','\n',250);
+            }
+            if(!trybasic){
                 basicFields[basicfields[i]] = null;
             }
-            else if(trybasic[0] == ''){
+            else if(trybasic[0].trim() == ''){
                 basicFields[basicfields[i]] = null;
                 basicInfo = trybasic[1];
             }
@@ -300,7 +306,6 @@ module.exports = {
             var db = admin.database()
                 db.ref('users/"'+user.id+'"/servants').get().then((usersnapshot) => {
                     if(usersnapshot.exists()){
-                        console.log(Object.keys(usersnapshot.val()).length)
                         if(Object.keys(usersnapshot.val()).length > servantlimit){
                             return msg.reply('You have exceeded the maximum number of allowed Servants!')
                         }

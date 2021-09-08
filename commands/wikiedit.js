@@ -90,6 +90,13 @@ function addToWiki(text,msg){
                 //basicInfo[1] = trybasic[1].trim();
                 basicInfo[0] = trybasic[1].trim();
             }
+            else{
+                trybasic = popTag(basicInfo[0],'name:','\n',250);
+                if(trybasic){
+                    checkname = trybasic[0];
+                    basicInfo[0] = trybasic[1].trim();
+                }
+            }
         }
         else if(!checkname){
             var trimmed = text.trim();
@@ -98,7 +105,7 @@ function addToWiki(text,msg){
                     throw 'You did not seem to include a name.'
                 }
                 checkname = trimmed.substr(0,trimmed.indexOf('|',1));
-                checkname = checkname.substr(1,checkname.length);  //trim pipes
+                checkname = checkname.substr(1,checkname.length+1);  //trim pipes
             }
             else{
                 //take up to first whitespace character
@@ -115,12 +122,19 @@ function addToWiki(text,msg){
                         hasspace = trimmed.length;  // if there are no tags in first row use newline
                     }
                 }
-                checkname = trimmed.substr(0,Math.min(hasspace,hasnew));
+                checkname = trimmed.substr(0,Math.min(hasspace,hasnew)).trim();
             }
             if(checkname.length < 1){
-                throw 'You did not seem to include a name.';
+                
+                    throw 'You did not seem to include a name.';
+                
             }
-            basicInfo = popTag(text,checkname+'|',nextheader,2000);
+            if(trimmed.toLowerCase().indexOf('name:') != -1){
+                trybasic = popTag(text,'name:','\n',250);
+                checkname = trybasic[0];
+            
+            }
+            basicInfo = popTag(text,checkname,nextheader,2000);
             if(checkname.indexOf('|')!=-1){
                 checkname = checkname.substr(0,checkname.length-1);
             }
@@ -165,6 +179,9 @@ function addToWiki(text,msg){
             for(i=0;i<basicfields.length;i++){
                 // load basic values
                 trybasic = popTag(basicInfo,'|'+basicfields[i],'\n',250,regfield='|');
+                if(!trybasic){
+                    trybasic = popTag(basicInfo,basicfields[i]+':','\n',250);
+                }
                 if(!trybasic){
                     continue;
                 }
@@ -348,7 +365,6 @@ function addToWiki(text,msg){
                             var addinsert = false;
                             var tryinsert = popTag(newInfo[i],'|insert|','\n',16);
                             if(tryinsert){
-                                // console.log(tryinsert);
                                 newInfo[i] = tryinsert[1];
                                 addinsert = Number(tryinsert[0]);
                                 if(!Number.isInteger(addinsert)){
