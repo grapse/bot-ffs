@@ -51,8 +51,8 @@ function popTag(body,tag,end,checklength,regfield=0){
         }
     }
     returnval.push(body.slice(index+tag.length,endindex).trim());
-    returnval.push(body.slice(0,index) + ('' || '') + body.slice(endindex));
-    return returnval.trim();
+    returnval.push((body.slice(0,index) + ('' || '') + body.slice(endindex)).trim());
+    return returnval;
 }
 
 function makeEmbed(msg,text,user,type,page,pagecount){

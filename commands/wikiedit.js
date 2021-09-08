@@ -73,8 +73,8 @@ function isValidHttpUrl(string) {
         }
     }
     returnval.push(body.slice(index+tag.length,endindex).trim());
-    returnval.push(body.slice(0,index) + ('' || '') + body.slice(endindex));
-    return returnval.trim();
+    returnval.push((body.slice(0,index) + ('' || '') + body.slice(endindex)).trim());
+    return returnval;
 }
 
 function addToWiki(text,msg){
