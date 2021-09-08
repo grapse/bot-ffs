@@ -74,7 +74,7 @@ function isValidHttpUrl(string) {
     }
     returnval.push(body.slice(index+tag.length,endindex).trim());
     returnval.push(body.slice(0,index) + ('' || '') + body.slice(endindex));
-    return returnval;
+    return returnval.trim();
 }
 
 function addToWiki(text,msg){
@@ -107,7 +107,7 @@ function addToWiki(text,msg){
             if(checkname.length < 1){
                 throw 'You did not seem to include a name.';
             }
-            basicInfo = popTag(text,checkname,nextheader,2000);
+            basicInfo = popTag(text,checkname+'|',nextheader,2000);
             if(checkname.indexOf('|')!=-1){
                 checkname = checkname.substr(0,checkname.length-1);
             }

@@ -27,18 +27,22 @@ var randomProperty = function (obj) {
     return obj[keys[ keys.length * Math.random() << 0]];
 }
 
-function popTag(body,tag,end,checklength){
+function popTag(body,tag,end,checklength,regfield=0){
     // 0th index is popped, 1st is remaining
     // checklength depends on tag
     var returnval = [];
-    const index = body.toLowerCase().indexOf(tag);
+    var index = body.toLowerCase().indexOf(tag.toLowerCase());
+    if(regfield != 0){
+        tag = body.slice(index,body.indexOf(regfield,index+1)+regfield.length)
+    }
     if(index < 0){
         // tag does not exist, no need to splice/pop
         return null;
     }
     else{
-        var endindex = body.indexOf(end,index);
+        var endindex = body.indexOf(end,index+tag.length);
         if(endindex == -1){
+            //end of file
             endindex = body.length;
         }
         if(endindex - index > checklength){
@@ -46,9 +50,9 @@ function popTag(body,tag,end,checklength){
             return null;
         }
     }
-    returnval.push(body.slice(index+tag.length,endindex));
+    returnval.push(body.slice(index+tag.length,endindex).trim());
     returnval.push(body.slice(0,index) + ('' || '') + body.slice(endindex));
-    return returnval;
+    return returnval.trim();
 }
 
 function makeEmbed(msg,text,user,type,page,pagecount){
