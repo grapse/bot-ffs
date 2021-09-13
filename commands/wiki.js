@@ -41,7 +41,7 @@ function isValidHttpUrl(string) {
     return url.protocol === "http:" || url.protocol === "https:";
   }
 
-function fillBasic(basicInfo,currentdata){
+function fillBasic(basicInfo,currentdata,msg){
     var db = admin.database();
     var basicFields = {};
         var trybasic;
@@ -109,7 +109,7 @@ function fillBasic(basicInfo,currentdata){
             for(let key in newStat){
                 for(i = 0;i<altnames[key].length;i++){
                     var tryfind = altnames[key][i];
-                    tryfind = popTag(basicFields['stats'],tryfind,',',16)
+                    tryfind = popTag(basicFields['stats'],tryfind+':',',',16)
                     if(tryfind){
                         newStat[key] = tryfind[0];
                         break;
@@ -469,7 +469,7 @@ function handleButtons(usermsg,botmsg,info,user){
                 isCollecting = false;
                 break;
             case 'edit':
-                var basicFields = fillBasic(m.content,info); //format data
+                var basicFields = fillBasic(m.content,info,usermsg); //format data
                 if(currentview == 'truename'){
                     Object.assign(info,basicFields)
                     db.ref('wiki/'+info['refPath']).update(basicFields);
