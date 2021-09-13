@@ -134,7 +134,7 @@ function addToWiki(text,msg,wikiclient){
             for(let key in newStat){
                 for(i = 0;i<altnames[key].length;i++){
                     var tryfind = altnames[key][i];
-                    tryfind = popTag(basicFields['stats'],tryfind,',',16)
+                    tryfind = popTag(basicFields['stats'],tryfind+':',',',16)
                     if(tryfind){
                         newStat[key] = tryfind[0];
                         break;
