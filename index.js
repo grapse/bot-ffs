@@ -169,14 +169,14 @@ client.on('messageCreate', message => {
 		//console.log(usercommand);
 		try{
 			const command = client.commands.get(usercommand);
-			command.execute(message,0);
+			command.execute(message,0,wikiclient=client);
 		} catch(error){
-			return message.reply('That is not a valid command!');
+			return message.reply('That is not a valid command!'+error);
 		}
 
 	}
 	//Handle Quotes--------------------------------------------------------------------     
-	if(message.content.startsWith('p!')){
+	if(msg.startsWith('p!')){
 		var searchKey = message.content.substring(2).toLowerCase();
 		var quoteRef = admin.database().ref('quotes/'+searchKey);
 		//console.log(quoteRef);
@@ -184,11 +184,14 @@ client.on('messageCreate', message => {
 		  	if(snapshot.exists()){
 				var quoteData = snapshot.val();
 				var channelobj = client.channels.cache.get(quoteData.cid);
-				console.log(searchKey);
 				//console.log(quoteData.cid);
-				if(['wikitemplate','wikiedit'].includes(searchKey)){
+				if(['wikitemplate'].includes(searchKey)){
 					channelobj.messages.fetch(quoteData.mid)
-					.then(m => message.reply({embeds:[new Discord.MessageEmbed().setDescription(m.content)]}))
+					.then(m => {
+                        var messagecontents = m.content.split('|split|')
+                        message.reply({embeds:[new Discord.MessageEmbed().setDescription(messagecontents[0]).setImage(messagecontents[1])]});
+                
+                    })
 					.catch(console.error);
 				}
 				else{
@@ -257,5 +260,4 @@ client.on("messageReactionRemove", function(messageReaction, user){
     }
     
 });
-
 client.login(process.env.TOKEN);

@@ -429,54 +429,6 @@ function addToWiki(text,msg){
             return msg.reply(`I have updated the wiki entry for \`${currentdata['name']}\`.`);
             
         }).catch(console.error);
-
-        /*
-        
-        
-        var nicknametruename = basicFields['name'];
-        //for registering nicknames
-        if(basicFields['truename']){
-            nicknametruename = basicFields['truename'];
-        }
-        else{
-            basicFields['truename'] = nicknametruename;
-        }
-
-        db.ref('wiki/'+basicFields['name']).get().then((servantsnapshot) =>{
-            var wikipath = 'wiki/error';
-            if(!servantsnapshot.exists()){
-                wikipath = basicFields['name']+'/0';
-            }
-            else if(servantsnapshot.val().length > articlelimit){
-                return msg.reply('There are already too many entries for that name! (You should not be seeing this error)')
-            }
-            else{
-                wikipath = basicFields['name']+'/'+servantsnapshot.val().length;
-            }
-            basicFields['refPath'] = wikipath;
-            db.ref('wiki/'+wikipath).set(basicFields);
-            db.ref('servantlist').push().set(wikipath);   //PUT THESE BACK AFTER TESTING
-            //add to author personal list
-            db.ref('users/"'+ msg.author.id+'"/servants').push().set(wikipath);
-            
-            var nicknameTokens = [];
-            if(basicFields['nickname']){
-                for(i = 0;i<basicFields['nickname'].length;i++){
-                    if(basicFields['nickname'][i].length < 64 && basicFields['nickname'][i].length > 0){
-                        var newLoc = basicFields['nickname'][i].toLowerCase();
-                        db.ref('wiki/'+basicFields['nickname'][i].toLowerCase()+'/'+wikipath.split('/').join('|')).set({author:String(msg.author.id),isRef:'true',
-                                                                refPath:wikipath,truename:nicknametruename});
-                        nicknameTokens.push(newLoc+'/'+wikipath.split('/').join('|'));
-                    }
-                    else{
-                        msg.reply(`Nickname \`${basicFields['nickname'][i]}\` was not added for being too long.`)
-                    }
-                }
-                db.ref('wiki/'+wikipath+'/nicknameTokens').set(nicknameTokens);
-            }
-
-            return msg.reply(`Your servant has been registered! Check it out with \`p?wiki ${wikipath}\``)
-        }).catch(console.error);//*/
     }catch(err){
         return msg.reply('Something went wrong: ' + err);
     }

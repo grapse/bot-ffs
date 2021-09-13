@@ -77,7 +77,7 @@ function popTag(body,tag,end,checklength,regfield=0){
     return returnval;
 }
 
-function addToWiki(text,msg){
+function addToWiki(text,msg,wikiclient){
     
     try{
         //First validate that the important details are there, and throw an error if it is not.
@@ -86,7 +86,7 @@ function addToWiki(text,msg){
             basicInfo = popTag(text,'',nextheader,2000);
         }
         else if(!basicInfo){
-            throw 'I could not find the basic information tag `'+basicheader+'`. If you included it, you may have gone over the 2000 character limit.'
+            throw 'I could not find a name. Make sure you use `Name: (insert name here)` so I know what to register it under!'
         }
         text = basicInfo[1];  //remove popped portion
         basicInfo = basicInfo[0]; //change to popped portion only
@@ -250,8 +250,8 @@ function addToWiki(text,msg){
                 }
                 db.ref('wiki/'+wikipath+'/nicknameTokens').set(nicknameTokens);
             }
-
-            return msg.reply(`Your servant has been registered! Check it out with \`p?wiki ${wikipath}\``)
+            msg.reply('Adding your Servant to my database...');
+            return wikiclient.commands.get('wiki').execute(msg,2,search=wikipath);
         }).catch(console.error);
     }catch(err){
         return msg.reply('Something went wrong: ' + err);
@@ -268,7 +268,7 @@ module.exports = {
             option.setName('query')
                 .setDescription('query')
                 .setRequired(false)),
-	async execute(msg,source) {
+	async execute(msg,source,wikiclient) {
 		//source to tell whether it was slash command to trigger it.
 		// 0 = regular, 1 = slash
         var args = msg;
@@ -320,7 +320,7 @@ module.exports = {
                     if(textfile.length > filecharacterlimit){
                         throw 'Your file is too big! (You should never see this warning)';
                     }
-                    addToWiki(textfile,msg);
+                    addToWiki(textfile,msg,wikiclient);
                 })
             }
             else if(msg.attachments.size > 0){
@@ -332,7 +332,7 @@ module.exports = {
                     if(textfile.length > filecharacterlimit){
                         throw 'Your file is too big! (You should never see this warning)';
                     }
-                    addToWiki(textfile,msg);
+                    addToWiki(textfile,msg,wikiclient);
                 }).catch((error) => {
                     console.error(error);
                 });
@@ -340,7 +340,7 @@ module.exports = {
             else{
                 //If user sends via direct text
                 textfile = args;
-                addToWiki(textfile,msg);
+                addToWiki(textfile,msg,wikiclient);
             }
             return;
         }).catch(console.error);

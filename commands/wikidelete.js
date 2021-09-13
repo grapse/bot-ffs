@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const Discord = require('discord.js');
 
 require('dotenv').config()
 //Firebase----------------------------------
@@ -33,7 +34,7 @@ module.exports = {
             option.setName('query')
                 .setDescription('query')
                 .setRequired(false)),
-	async execute(msg,source) {
+	async execute(msg,source,search='') {
 		//source to tell whether it was slash command to trigger it.
 		// 0 = regular, 1 = slash
         var args = msg;
@@ -46,6 +47,10 @@ module.exports = {
                     return msg.reply('The wiki is not available via slash command yet!')
                 args = interaction.data.options[0];
 			}
+            else if(source == 2){
+                user = msg.author;
+                args=search;
+            }
 			else{
                 user = msg.author;
                 
@@ -54,7 +59,6 @@ module.exports = {
                     return msg.reply('Please include a search, or use `p?wiki random` for a surprise! \nIf you would like to add your own Servants, please use `p?wikitemplate` for more info!')
                 }
 			}
-            //msg.reply(args.toString());
 
             var query = args.toLowerCase();
             var searchnumber = null; // the entry to search for
