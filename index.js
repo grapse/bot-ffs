@@ -196,9 +196,15 @@ client.on('messageCreate', message => {
 					.catch(console.error);
 				}
 				else{
-					channelobj.messages.fetch(quoteData.mid)
-				.then(m => message.reply({embeds:[makeEmbed(m.content)]}))
+                    try{
+                        channelobj.messages.fetch(quoteData.mid)
+				.then(m => message.reply({embeds:[makeEmbed(m.content)]}).catch(message.reply({content:'I could not find the quote. The original message or channel was deleted..'})))
 				.catch(console.error);
+                    }
+                    catch{
+                        message.reply({content:'I could not find the quote. The original message or channel was deleted..'})
+                    }
+					
 				}
 			}
 			else{
