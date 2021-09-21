@@ -25,7 +25,7 @@ const basicfields = ['name','truename','class','colour','attribute','alignment',
 var admin = require("firebase-admin");
 
 // Fetch the service account key JSON file contents
-var serviceAccount = require("../ffs-bot-49e0ca636b9d.json");
+var serviceAccount = require("../ffs-bot-4432a48dc561.json");
 serviceAccount['private_key'] = process.env.private_key.replace(/\\n/g, '\n');
 
 // Initialize the app with a custom auth variable, limiting the server's access
