@@ -24,7 +24,7 @@ var admin = require("firebase-admin");
 
 // Fetch the service account key JSON file contents
 var serviceAccount = require("./ffs-bot-7d8fc4770023.json");
-//serviceAccount['private_key'] = process.env.private_key.replace(/\\n/g, '\n');
+serviceAccount['private_key'] = process.env.private_key.replace(/\\n/g, '\n');
 
 // Initialize the app with a custom auth variable, limiting the server's access
 admin.initializeApp({
@@ -198,11 +198,11 @@ client.on('messageCreate', message => {
 				else{
                     try{
                         channelobj.messages.fetch(quoteData.mid)
-				.then(m => message.reply({embeds:[makeEmbed(m.content)]}).catch(message.reply({content:'I could not find the quote. The original message or channel was deleted..'})))
+				.then(m => message.reply({embeds:[makeEmbed(m.content)]}))
 				.catch(console.error);
                     }
                     catch{
-                        message.reply({content:'I could not find the quote. The original message or channel was deleted..'})
+                        message.reply({content:'I could not find the quote. The original message or channel was deleted.'})
                     }
 					
 				}
