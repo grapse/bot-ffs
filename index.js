@@ -23,7 +23,7 @@ for (const file of commandFiles) {
 var admin = require("firebase-admin");
 
 // Fetch the service account key JSON file contents
-var serviceAccount = require("./ffs-bot-7d8fc4770023");
+var serviceAccount = require("./ffs-bot-7d8fc4770023.json");
 serviceAccount['private_key'] = process.env.private_key.replace(/\\n/g, '\n');
 
 // Initialize the app with a custom auth variable, limiting the server's access
