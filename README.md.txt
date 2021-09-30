@@ -1,0 +1,1 @@
+Discord.js WikiMaker bot. Used to create highly customizable wikis on any topic of your choosing, on Discord!
